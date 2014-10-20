@@ -52,8 +52,6 @@ public class IndexController extends AbstractBaseController {
     @RequestMapping(value = {"/", "", "index.do"}, method=RequestMethod.GET)
 	public String index(HttpSession session, ModelMap model) throws Exception {
 
-    	this.handleLogin(session);
-
 		return "index";
 	}
 
