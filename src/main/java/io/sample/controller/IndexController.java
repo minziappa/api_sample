@@ -1,6 +1,6 @@
 package io.sample.controller;
 
-import java.util.Map;
+import io.sample.bean.SampleBean;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -20,18 +19,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * 1. Explain for a method .....
  * 
  * @author  Woong-joon Kim
- * @version 0.1, 14/07/17
+ * @version 0.1, 14/10/17
  * @see     io.sample.controller.IndexController#index()
  * @since   JDK1.7
  */
 @Controller
-@RequestMapping("/index")
 public class IndexController extends AbstractBaseController {
 
 	final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
-    @Autowired
-    private Validator validator;
 	@Autowired
 	private MessageSource message;
 
@@ -49,65 +45,9 @@ public class IndexController extends AbstractBaseController {
      * 
      * @since  1.7
      */
-    @RequestMapping(value = {"/", "", "index.do"}, method=RequestMethod.GET)
-	public String index(HttpSession session, ModelMap model) throws Exception {
-
-		return "index";
-	}
-
-    /**
-     * Check several annotation validate for ......
-     * 
-     * @param  ModelMap 
-     *         model
-     *         
-     * @throws  Exception
-     *          If a error occur, ...
-     *
-     * @return String
-     * 		   a file name of FTL.
-     * 
-     * @since  1.7
-     */
-    @RequestMapping(value = {"vali.do"})
-	public String vali() throws Exception {
-		return "sample/validator";
-	}
-
-    /**
-     * Check several annotation validate for ......
-     * 
-     * @param  ModelMap 
-     *         model
-     *         
-     * @throws  Exception
-     *          If a error occur, ...
-     *
-     * @return String
-     * 		   a file name of FTL.
-     * 
-     * @since  1.7
-     */
-    @RequestMapping(value = {"validator.do"})
-	public String validator(BindingResult bindingResult, 
-			ModelMap model) throws Exception {
-
-    	// logger.info("date >>> " + validatorPara.getUserData());
-
-		// If it occurs a error, set the default value.
-		if (bindingResult.hasErrors()) {
-			logger.error("validate.do - it is occured a parameter error.");
-			Map<String, String> mapErrorMessage = this.handleErrorMessages(bindingResult.getAllErrors());
-			model.addAttribute("errorMessage", mapErrorMessage);
-			return "sample/validator";
-		}
-
-		return "sample/validator";
-	}
-
-    @RequestMapping(value = {"layout.do"})
-	public String layout() throws Exception {
-		return "layout/home";
+    @RequestMapping(value = {"/", "", "index"}, method=RequestMethod.GET)
+	public void index(@RequestBody byte[] body) throws Exception {
+    	this.handleRequest(body, SampleBean.class);
 	}
 
 }

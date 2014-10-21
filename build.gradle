@@ -40,6 +40,10 @@ dependencies {
 	compile "org.springframework:spring-webmvc:3.1.4.RELEASE"
 	testCompile "org.springframework:spring-test:3.1.4.RELEASE"
 	compile "org.springmodules:spring-modules-jakarta-commons:0.8"
+	compile "com.googlecode.json-simple:json-simple:1.1.1"
+	compile "com.fasterxml.jackson.core:jackson-core:2.4.3"
+	compile "com.fasterxml.jackson.core:jackson-annotations:2.4.3"
+	compile "com.fasterxml.jackson.core:jackson-databind:2.4.3"
 	provided "org.apache.tomcat:tomcat-servlet-api:7.0.56"
 	testCompile "junit:junit:4.+"
 }

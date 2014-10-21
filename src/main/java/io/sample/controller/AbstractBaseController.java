@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class AbstractBaseController {
 
@@ -65,6 +69,34 @@ public abstract class AbstractBaseController {
 		File file = new File(path + fileName);
 		logger.info("saving path = " + file.getPath());
 		OutputStream os = new FileOutputStream(file);
+        InputStream in = new ByteArrayInputStream(byteOut);
+        int n = -1;
+        while((n = in.read(byteOut)) > 0) {
+        	os.write(byteOut, 0, n);
+        }
+        in.close();
+        os.flush();
+        os.close();
+	}
+
+	public  <T> T handleRequest(byte[] body, Class<T> bean) throws Exception {
+
+    	ObjectMapper mapper = new ObjectMapper();
+    	String jsonString = new String(body);
+    	logger.info("json >> " + jsonString);
+    	return mapper.readValue(jsonString, bean);
+	}
+
+	public <T> void handleResponse(T bean, HttpServletResponse response) throws IOException {
+
+    	ObjectMapper mapper = new ObjectMapper();
+    	String jsonString = mapper.writeValueAsString(bean);
+
+		byte[] byteOut = jsonString.getBytes();
+
+		response.setHeader("Content-Length", String.valueOf(byteOut.length));
+		response.setContentType("application/octet-stream");
+        OutputStream os = response.getOutputStream();
         InputStream in = new ByteArrayInputStream(byteOut);
         int n = -1;
         while((n = in.read(byteOut)) > 0) {
