@@ -2,6 +2,7 @@ package io.sample.controller;
 
 import io.sample.bean.SampleBean;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -45,9 +46,12 @@ public class IndexController extends AbstractBaseController {
      * 
      * @since  1.7
      */
-    @RequestMapping(value = {"/", "", "index"}, method=RequestMethod.GET)
-	public void index(@RequestBody byte[] body) throws Exception {
-    	this.handleRequest(body, SampleBean.class);
+    @RequestMapping(value = {"/", "", "index"}, method=RequestMethod.POST)
+	public void index(@RequestBody byte[] body, HttpServletResponse response) throws Exception {
+    	SampleBean sample = null;
+    	sample = this.handleRequest(body, SampleBean.class);
+    	sample.setValue("test");
+    	this.handleResponse(sample, response);
 	}
 
 }
